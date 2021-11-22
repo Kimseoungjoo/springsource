@@ -36,8 +36,10 @@ public class BookDAO {
 			
 			int result = pstmt.executeUpdate();
 			
-			if(result>0) insertFlag =true;
-			
+			if(result>0) { 
+				insertFlag =true;
+				commit(con);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -63,7 +65,10 @@ public class BookDAO {
 			
 			int result = pstmt.executeUpdate();
 			
-			if(result>0) deleteFlag = true; 
+			if(result>0) {
+				deleteFlag = true;
+				commit(con);
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,7 +95,10 @@ public class BookDAO {
 			pstmt.setString(2, code);
 			int result = pstmt.executeUpdate();
 			
-			if(result>0) updateFlag = true;
+			if(result>0) {
+				updateFlag = true;
+				commit(con);
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();

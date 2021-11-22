@@ -13,12 +13,27 @@ import com.company.persistence.BookDAO;
 @Service // == @Component
 public class BookServiceImpl implements BookService {
 
-	@Autowired
+	@Autowired // 주입 (생성된 객체를 넣어줘)
 	private BookDAO dao;
 	
 	@Override
 	public List<BookDTO> getList() {
 		return dao.list();
+	}
+
+	@Override
+	public boolean insertBook(BookDTO dto) {
+		return dao.insert(dto);
+	}
+
+	@Override
+	public boolean deleteBook(String code) {
+		return dao.delete(code);
+	}
+
+	@Override
+	public boolean updateBook(String code, int price) {
+		return dao.update(code, price);
 	}
 
 }
