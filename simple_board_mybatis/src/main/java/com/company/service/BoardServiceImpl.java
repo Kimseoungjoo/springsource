@@ -7,39 +7,39 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.company.domain.BoardDTO;
-import com.company.persistence.BoardDAO;
+import com.company.mapper.BoardMapper;
 
 @Service("boardService")
 public class BoardServiceImpl implements BoardService {
 	
 	@Autowired
-	private BoardDAO dao;
+	private BoardMapper mapper;
 	
 	
 	@Override
 	public boolean insertBoard(BoardDTO insertDto) {
 		
-		return dao.insert(insertDto);
+		return mapper.insert(insertDto) > 0 ? true:false;
 	}
 
 	@Override
 	public boolean deleteBoard(int bno) {
-		return dao.delete(bno);
+		return mapper.delete(bno) > 0 ? true:false;
 	}
 
 	@Override
 	public BoardDTO getRow(int bno) {
-		return dao.getRow(bno);
+		return mapper.read(bno);
 	}
 
 	@Override
 	public List<BoardDTO> getRows() {
-		return dao.listAll();
+		return mapper.all();
 	}
 
 	@Override
 	public boolean updateBoard(BoardDTO updateDto) {
-		return dao.update(updateDto);
+		return mapper.update(updateDto) > 0 ? true:false;
 	}
 
 }
