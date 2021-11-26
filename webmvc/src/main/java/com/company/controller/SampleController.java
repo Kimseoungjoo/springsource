@@ -3,8 +3,11 @@ package com.company.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.company.domain.UserDTO;
 
@@ -32,7 +35,7 @@ public class SampleController {
 	// GET방식에만 응답하는 Controller
 	@RequestMapping(value="/login", method=RequestMethod.GET) // /sample/login
 	public String login() {
-		log.info("/login 요청.......");
+		log.info("/login GET 요청.......");
 		// view 리졸버 login
 		return "login";
 	}
@@ -62,28 +65,32 @@ public class SampleController {
 //	}
 	
 	//바인딩 변수사용
+	// Action 이라고 생각하자
+//	@RequestMapping(value="/login",method=RequestMethod.POST)
+//	public String loginPost(String userid, @RequestParam("pwd") String password,Model model) { // jsp에서 넘어오는 변수 name 명과 동일하게 작성해주어야한다.
+//		
+//		log.info("/member/login Post 요청");
+//		
+//		log.info("userid : "+userid);
+//		log.info("pasword : "+password);
+//		
+//		model.addAttribute("userid", userid);	  // request.setAttribute
+//		model.addAttribute("password", password); // request.setAttribute
+//		
+//		return "/sample/basic";
+//	}
+	
 	@RequestMapping(value="/login",method=RequestMethod.POST)
-	public String loginPost(String userid, String password) {
+	public String loginPost(@ModelAttribute("login") UserDTO userDto) {
 		
 		log.info("/member/login Post 요청");
 		
-		log.info("userid : "+userid);
-		log.info("pasword : "+password);
+		log.info("userid : "+userDto.getUserid());
+		log.info("pasword : "+userDto.getPassword());
+		log.info("name : "+userDto.getName());
 		
 		
 		return "/sample/basic";
 	}
-	
-//	@RequestMapping(value="/login",method=RequestMethod.POST)
-//	public String loginPost(UserDTO userDto) {
-//		
-//		log.info("/member/login Post 요청");
-//		
-//		log.info("userid : "+userDto.getUserid());
-//		log.info("pasword : "+userDto.getPassword());
-//		
-//		
-//		return "/sample/basic";
-//	}
 	
 }

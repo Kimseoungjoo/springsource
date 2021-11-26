@@ -8,9 +8,17 @@
 </head>
 <body>
 <h1>Basic</h1>
-<h3>userid : ${userDTO.userid}</h3>
-<h3>password: ${userDTO.password}</h3>
 
+<h3>userid : ${userDTO.userid}</h3>  
+<h3>password: ${userDTO.password}</h3>
+<h3>name: ${userDTO.name}</h3>
+
+<hr/>
+
+<h3>userid : ${login.userid}</h3>  
+<h3>password: ${login.password}</h3>
+<h3>name : ${login.name}</h3>
+<hr/>
 
 <h3>userid : ${userid}</h3>
 <h3>password: ${password}</h3>
