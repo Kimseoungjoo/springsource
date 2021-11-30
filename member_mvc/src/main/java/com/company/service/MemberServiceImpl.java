@@ -3,6 +3,8 @@ package com.company.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.company.domain.ChangeDTO;
+import com.company.domain.LoginDTO;
 import com.company.domain.MemberDTO;
 import com.company.mapper.MemberMapper;
 
@@ -16,15 +18,25 @@ public class MemberServiceImpl implements MemberService {
 	public boolean register(MemberDTO memberDto) {
 		return mapper.insert(memberDto) > 0 ? true:false;
 	}
-
+	
 	@Override
-	public MemberDTO select(String userid, String password) {
-		return mapper.read(userid, password);
+	public LoginDTO login(LoginDTO logDto) {
+		return mapper.login(logDto);
 	}
 
 	@Override
 	public MemberDTO overlabCheck(String userid) {
 		return mapper.overlap(userid);
+	}
+
+	@Override
+	public boolean changePwd(ChangeDTO changeDto) {
+		return mapper.changePwd(changeDto) > 0 ? true:false;
+	}
+
+	@Override
+	public boolean leaveLog(LoginDTO leaveDto) {
+		return mapper.leave(leaveDto) > 0? true:false;
 	}
 
 }

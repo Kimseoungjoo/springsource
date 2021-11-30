@@ -1,103 +1,93 @@
 package com.company.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.company.domain.MemberDTO;
+import com.company.domain.ChangeDTO;
+import com.company.domain.LoginDTO;
 import com.company.service.MemberService;
 
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Controller
-@RequestMapping("/register/*")
+@RequestMapping("/member/*")
+// 로그인 로그아웃 회원탈퇴 회원수정
 public class MemberController {
-	
+
 	@Autowired
 	private MemberService service;
-	
-	@GetMapping("/step1")
-	public void registGet() {
-		log.info("register/step1.jsp 요청 ");
-	}
-	
-	//step2
-	@PostMapping("/step2")
-	public String registerGet2(boolean agree, RedirectAttributes rtts) {
-		log.info("/register/step2.jsp 요청"+agree);
-		if(!agree) {
-			// step1 페이지 보여주기
-			//return "/register/step1";	 //WEB-INF/views/register/setp1
-			rtts.addFlashAttribute("check","false");
-			return "redirect:/register/step1";
-			
-		}
-		// step2 페이지 보여주기
-		return "/register/step2";
-	}
-	
-	// 로그인 중복 확인
-	@ResponseBody // 리턴하는 값이 데이터임 (jsp 페이지 찾지마)
-	@PostMapping("/checkId")
-	public String idCheck(String userid) {
-		log.info("중복아이디 검사 "+userid);
-		
-		if(service.overlabCheck(userid)!=null) {
-			return "false";
-		}
-		return "true";
-	}
-	
-	
-	@PostMapping("/step3")
-	public String registerPost(MemberDTO memberDto) {
-		log.info("회원가입 요청 !");
-		try {
-			if(!service.register(memberDto)) {
-				//회원 가입 페이지 이동
-				return "/register/step2";
-			}
-		} catch (Exception e) {
-			return "/register/step2";
-		}
-		return "redirect:/register/signin";
-	}
-	
-	// 로그인 시 확인 작성 
-	@PostMapping("/signin")
-	public String readPost(String userid, String password, Model model) {
-		MemberDTO memberDto = service.select(userid, password);
-		if(memberDto!=null) {
-			model.addAttribute("memberDto", memberDto);
-			return "/";
-		}
-		return "signin";
-	}
-	
-	
-	
 	
 	// signin 페이지 들어옴
 	@GetMapping("/signin")
 	public void readGet() {
 		log.info("로그인 요청");
-		// /register/signin/
+		// /member/signin/
 	}
 	
-	// http://localhost:8080/register/step2 +GET
-	// http://localhost:8080/register/step3 +GET
-	// 405 - 허용되지 않는 메소드 
+	// 로그인 시 확인 작성 
+	@PostMapping("/signin")
+	public String loginPost(LoginDTO logDto, HttpSession session) {
+		log.info("login 요청"+logDto);
+			
+		LoginDTO loginDto = service.login(logDto); 
 	
-	@GetMapping(value= {"/step2","/step3"})
-	public String handleGet() {
-		log.info("잡아와라 이자슥아(step2,step3직접요청 ...");
+		session.setAttribute("loginDto", loginDto);
+			
 		return "redirect:/";
 	}
 	
+	// 로그아웃 시 
+	@GetMapping("/logout")
+	public String logoutGet(HttpSession session) {
+		log.info("로그아웃");
+		session.invalidate();
+		return "redirect:/";
+	}
+	
+	// 비밀번호 변경시 jsp 이동
+	@GetMapping("/changePwd")
+	public void changeGet() {
+		log.info("비밀번호 변경(changePwd.jsp) 요청");
+	}
+	
+	// 비밀번호 변경 
+	@PostMapping("/changePwd")
+	public String changePwdPost(ChangeDTO changeDto, HttpSession session) {
+		log.info("비밀번호 변경 요청"+ changeDto);
+		//userid 가져오기
+		LoginDTO loginDto = (LoginDTO) session.getAttribute("loginDto");
+		changeDto.setUserid(loginDto.getUserid());
+		
+		if(service.changePwd(changeDto)) {
+			session.invalidate();
+			
+			return "redirect:/member/signin";
+		}
+		return "redirect:/member/changePwd";
+	}
+	
+	// 회원탈퇴 창 띄우기
+	@GetMapping("/leave")
+	public void leaveGet() {
+		log.info("회원탈퇴.jsp");
+	}
+	
+	@PostMapping("/leave")
+	public String leavePost(LoginDTO leaveDto,HttpSession session) {
+		log.info("회원 탈퇴 요청"+leaveDto);
+		LoginDTO loginDto = (LoginDTO) session.getAttribute("loginDto");
+		leaveDto.setUserid(loginDto.getUserid());
+		if(service.leaveLog(leaveDto)) {
+			session.invalidate();
+			return "redirect:/";
+		}
+		return "redierect:/member/leave";  // 탈퇴 실패시
+		
+	}
 }

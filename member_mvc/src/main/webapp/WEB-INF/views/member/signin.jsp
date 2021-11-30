@@ -34,7 +34,7 @@
       <label for="inputPassword" class="sr-only">비밀번호</label>
       <input
         type="password"
-        id="inputPassword"
+        id="Password"
         name="password"
         class="form-control"
         placeholder="비밀번호"
@@ -51,7 +51,7 @@
       <button class="btn btn-lg btn-primary btn-block" type="submit">
         Sign in
       </button>
-      <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+      <p class="mt-5 mb-3 text-muted">&copy; 2020-2021</p>
     </form>
   </body>
 </html>

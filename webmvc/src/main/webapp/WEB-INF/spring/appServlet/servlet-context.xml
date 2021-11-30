@@ -23,6 +23,15 @@
 	
 	<context:component-scan base-package="com.company.controller" />
 	
-	
-	
+	<beans:bean id="sampleInterceptor" class="com.company.interceptor.SampleInterceptor"></beans:bean>
+	<!--  interceptor 설정 -->
+	<interceptors>
+		<interceptor>
+			<mapping path="/doA"></mapping>
+			<mapping path="/doB"></mapping>
+			<mapping path="/doC"></mapping>
+			<mapping path="/"></mapping>
+			<beans:ref bean="sampleInterceptor"/>
+		</interceptor>
+	</interceptors>
 </beans:beans>

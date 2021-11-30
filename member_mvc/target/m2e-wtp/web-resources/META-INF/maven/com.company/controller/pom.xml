@@ -99,7 +99,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${org.slf4j-version}</version>
-			<scope>runtime</scope>
 		</dependency>
 		<!-- log4j-slf4j-impl : slf4j facade 이기 때문에 실제 구현 log 라이브러리랑 연동 -->
 		<dependency>

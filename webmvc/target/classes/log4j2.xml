@@ -18,7 +18,7 @@
 		<Logger name="org.springframework.jdbc" level="debug" />
 		
 		<Logger name="com.company.controller" level="info" />
-
+		
 		<Root level="debug">
 			<AppenderRef ref="Console" />
 		</Root>
