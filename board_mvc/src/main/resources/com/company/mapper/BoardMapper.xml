@@ -16,23 +16,43 @@
 		values(#{bno},#{title},#{content},#{writer})
 	</insert>
 	
-	<!-- 전체 목록 -->
-	<select id="list" resultType="com.company.domain.BoardDTO">
-		select *
-		from spring_board where bno>0 order by bno desc, regdate desc
+	<!-- 페이지 나누기 전 전체 목록 -->
+		<!--select *
+		from spring_board where bno>0 order by bno desc, regdate desc -->	
+	<!-- 페이지 나눈 후 전체 목록 -->
+ 	<select id="list" resultType="com.company.domain.BoardDTO">
+	<![CDATA[ 
+		select bno,title,regdate,updatedate
+		from   (select /*+INDEX_DESC(spring_board pk_spring_board)*/ rownum rn,bno,title,regdate,updatedate
+			    from spring_board
+				where rownum <= (#{pageNum} * #{amount}))
+		where rn > (#{pageNum}-1) * #{amount}
+	]]>
 	</select>
+	
+	<!-- 전체 게시물 수 -->
+	<select id="totalCnt" resultType="int">
+		select count(*)
+		from spring_board
+		where bno>0
+	</select>
+	
+	
 	<!-- 선택 게시판 가져오기 -->
 	<select id="read" resultType="com.company.domain.BoardDTO">
 		select bno,title,content,writer from spring_board where bno=#{bno}
 	</select>
+	
 	<!--  수정  -->
 	<update id="update">
       update spring_board
       set title=#{title}, content=#{content}, updatedate=sysdate
       where bno=#{bno}
    </update>
+	
 	<!-- 목록 삭제 -->
 	<delete id="remove">
 		delete from spring_board where bno=#{bno}
 	</delete>
+	
 </mapper>
