@@ -14,10 +14,10 @@ public class Criteria {
 	private String type;
 	private String keyword;
 	
-	
 	public Criteria() {
-		this(1,10);
+		this(1,10); // 초기값
 	}
+	
 	public Criteria(int pageNum, int amount) {
 		this.pageNum = pageNum;
 		this.amount = amount;

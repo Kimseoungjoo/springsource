@@ -48,7 +48,8 @@ $(function(){
 		$(this).attr("option",$(this).val());
 		// 가져온 값을 actionForm에 amount 값 수정하기
 		actionForm.find("input[name='amount']").val(amount);
-		
+		// bno제거
+		actionForm.find("input[name='bno']").remove();
 		// actionForm 보내기
 		actionForm.submit();
 	})

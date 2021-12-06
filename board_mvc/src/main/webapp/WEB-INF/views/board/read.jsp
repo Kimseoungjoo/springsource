@@ -45,7 +45,15 @@
 <form action="" id="actionForm">
 	<input type="hidden" name="pageNum" value="${cri.pageNum}"/>
 	<input type="hidden" name="amount" value="${cri.amount}"/>
+	<input type="hidden" name="type" value="${cri.type}"/>
+	<input type="hidden" name="keyword" value="${cri.keyword}"/>
 	<input type="hidden" name="bno" value="${dto.bno}"/>
-</form>       
+</form>
+
+<script>
+	// 현재 글번호 가져오기
+	let bno = ${dto.bno}; // 다음 페이지(read.js)에서 데이터를 부를 때 이 데이터 값을 가져올 수가 없기때문에 jsp에서 담고 보내는 형식 
+</script>
+<script src="/resources/js/reply.js"></script>
 <script src="/resources/js/read.js"></script>
 <%@include file="../includes/footer.jsp" %>       
