@@ -161,7 +161,8 @@ $(function() {
 	
 	//---------------------------- 댓글 전체 가져오기 ----------------------
 	function showList(page) {
-		replyService.getList({ bno: bno, page:page||1}, function(data) {
+		replyService.getList({ bno: bno, page:page||1}, function(total,data) {
+			console.log(total);
 			console.log(data);
 			
 			// 댓글이 없는 경우 

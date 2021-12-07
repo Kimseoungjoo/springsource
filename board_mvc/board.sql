@@ -60,11 +60,17 @@ create table spring_reply(
 
 create sequence seq_reply;
 
-
+ALTER TABLE spring_reply RENAME COLUMN replydate to replaydate;
 select * from SPRING_REPLY;
 
+-- 인덱스 생성
+create index idx_reply on spring_reply(bno desc, rno asc);
 
-
+select rno,bno,reply,replyer,replydate, updatedate
+from(select /*+INDEX(spring_reply idx_reply)*/rownum rn,rno,bno,reply,replyer,replydate, updatedate
+from spring_reply
+where bno=2799 and rno>0 and rownum<=20)
+where rn > 10;
 
 
 
