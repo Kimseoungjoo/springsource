@@ -30,8 +30,7 @@ $(function() {
 
 
 	// ========================댓글 작업 	=========================
-	
-	// 댓글 삽입 - 
+	//------------------------댓글 삽입-------------------------------
 	// 댓글 모달 창 영역 가져오기
 	let modal =$("#replyModal");
 	
@@ -64,7 +63,6 @@ $(function() {
 		modal.modal('show');
 		
 	})// # addReplyBtn end
-	
 	modalRegisterBtn.click(function(){
 		var reply ={
 			bno:bno,
@@ -86,33 +84,82 @@ $(function() {
 				}
 		});// add end;
 	})// 등록버튼 end
+	//-----------------------------------------------------------
 	
-	// 댓글 삭제 하기
-	/*replyService.remove(61,
-		function(result){ //success
-			alert(result);	
-		},	 
-		function(msg){// error
-			alert(msg);
+	//------------------------- 댓글 삭제 하기------------------------
+	modalRemoveBtn.click(function(){
 		
-	});*/ // remove end
+		replyService.remove(modal.data("rno"),
+			function(result){ //success
+				if(result=="success"){
+					alert("댓글 삭제 성공");
+				}
+				modal.modal("hide");
+				
+				showList(1);
+				
+			},	 
+			function(msg){// error
+				alert(msg);
+		
+		}); // remove end
+	})
+	//-----------------------------------------------------------
 
-	// 댓글 수정하기
-	/*replyService.update({rno:26,reply:"졸려 ? 졸려 ?졸려 ? 잠이 와 ? 잠이 와 ?"},
-		function(data){
-			alert(data);
-		},
-		function(msg){
-			alert(msg);
-		}
-	);// update end*/
+	//------------------------댓글 수정-------------------------------
+	modalModifyBtn.click(function(){
+		
+		var reply = {
+			rno:modal.data("rno"),
+			reply:modalReply.val(),
+		};
+		
+		replyService.update(reply,
+			function(data){
+				if(data=="success"){
+					alert("수정성공");
+				}
+				modal.modal("hide");
+				showList(1);
+			},
+			
+			function(msg){
+				alert(msg);
+			}
+		);// update end
+	})
+	//-----------------------------------------------------------
 	
-	// 댓글 가져오기
-	/*replyService.get(26,function(data){
-		console.log(data);
-	});// get end*/
-
-	// 댓글 전체 가져오기 
+	//------------------------댓글 하나 가져오기-------------------------------
+	// 댓글이 반복되는 코드는 실제로 존재하는 것이 아닌 나중에 동적으로 생성되기 때문에
+	// 있는 요소에 이벤트를 걸고 나중에 위임하는 형태로 작성
+	replyUl.on("click","li",function(){
+		
+		var rno=$(this).data("rno");
+		
+		console.log("rno " + rno);
+		
+		replyService.get(rno,function(data){
+			console.log(data);
+			
+			// 도착한 데이터를 모달창에 보여주기 
+			modalReply.val(data.reply);
+			modalReplyer.val(data.replyer);
+			modalReplyDate.val(replyService.displayTime(data.replydate)).attr("readonly","readonly");
+			
+			// 수정/ 삭제를 위한 기본키
+			modal.data("rno",data.rno);			
+			
+			// 등록버튼 숨기기
+			modal.find("#modalRegisterBtn").hide();
+			
+			modal.modal("show");
+			
+		});// get end
+	})
+	//-----------------------------------------------------------
+	
+	//---------------------------- 댓글 전체 가져오기 ----------------------
 	function showList(page) {
 		replyService.getList({ bno: bno, page:page||1}, function(data) {
 			console.log(data);
@@ -137,5 +184,6 @@ $(function() {
 		}); // getList END
 
 	}
+	//-----------------------------------------------------------
 
 })
