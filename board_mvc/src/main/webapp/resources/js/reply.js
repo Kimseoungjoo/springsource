@@ -103,7 +103,7 @@ let replyService = (function(){
 			return [(hh>9?'':'0')+hh,':',(mi>9?'':'0')+mi,':',(ss>9?'':'0')+ss].join('');
 		}else{ // 년/월/일 처리 
 			var yy = dateObj.getFullYear();
-			var mm = dateObj.getMonth()+1; // ㅜ월이 0부터 시작
+			var mm = dateObj.getMonth()+1; // 월이 0부터 시작
 			var dd = dateObj.getDate();
 			return [yy,'/',(mm>9?'':'0')+mm,'/',(dd>9?'':'0')+dd].join('');
 		}

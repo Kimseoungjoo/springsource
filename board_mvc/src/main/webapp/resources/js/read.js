@@ -7,6 +7,10 @@ $(function() {
 	showList(1);
 	// 댓글 보여줄 영역 가져오기
 	let replyUl =  $(".chat");
+	// 댓글 페이지 나누기 영역 가져오기
+	let replyPageFooter = $(".panel-footer");
+	let pageNum = 1;
+	
 	
 	let form = $("#actionForm")
 
@@ -80,7 +84,7 @@ $(function() {
 					}
 					modal.find("input").val("");
 					modal.modal("hide");
-					showList(1);
+					showList(-1);
 				}
 		});// add end;
 	})// 등록버튼 end
@@ -96,7 +100,7 @@ $(function() {
 				}
 				modal.modal("hide");
 				
-				showList(1);
+				showList(pageNum);
 				
 			},	 
 			function(msg){// error
@@ -120,7 +124,7 @@ $(function() {
 					alert("수정성공");
 				}
 				modal.modal("hide");
-				showList(1);
+				showList(pageNum);
 			},
 			
 			function(msg){
@@ -165,11 +169,21 @@ $(function() {
 			console.log(total);
 			console.log(data);
 			
+			// 새 댓글을 작성한 경우 마지막 페이지를 띄우기 위해 작성
+			if(page == -1){
+				pageNum = Math.ceil(total/10.0);
+				showList(pageNum);
+				return;
+			}
+			
+			
+			
 			// 댓글이 없는 경우 
 			if(data == null || data.length == 0){
 				replyUl.html("");
 				return;
 			}
+			
 			// 댓글이 있는 경우 
 			let str="";
 			
@@ -182,9 +196,55 @@ $(function() {
 				str+="</div></div></li>";
 			}
 			replyUl.html(str);
+			showReplyPage(total);
 		}); // getList END
-
-	}
 	//-----------------------------------------------------------
+	}//showList END
+	
+	function showReplyPage(total){
+		// 마지막 페이지 계산하는 코드
+		let endPage = Math.ceil(pageNum/10.0)*10;
+		// 시작 페이지 계산
+		let startPage = endPage-9;
+		// 이전버튼
+		let prev = startPage-1;
+		// 다음버튼
+		let next = false;
+		
+		if(endPage*10>=total){
+			endPage = Math.ceil(total/10.0);
+		}
+		if(endPage*10<total){
+			next = true;
+		}
+		let str = "<ul class='pagination pull-right'>";
+		if(prev){
+			str += "<li class='paginate_button'>";
+			str += "<a href='"+(startPage-1) +"'>Previous</a></li>";
+		}
+		for(var i=startPage; i<=endPage;i++){
+			var active = pageNum == i ? "active" : "";
+			
+			str += "<li	class='pageinate_button "+active+"'>";
+			str += "<a href='"+ i +"'>"+i+"</a></li>";
+		}
+		if(next){
+			str += "<li class='paginate_button'>";
+			str += "<a href='"+(endPage+1) +"'>next</a></li>";
+		}
+		
+		str +="</ul>";
+		replyPageFooter.html(str);
+	} // showReplyPage END
+	
+	// 댓글 페이지 번호 클릭시
+	// 이벤트 위임 방식
+	replyPageFooter.on("click","li a",function(e){
+		e.preventDefault(); // a태그 동작 중지
+		
+		pageNum = $(this).attr('href');		
+		showList(pageNum);
+		
+	})
 
 })

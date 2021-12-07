@@ -54,8 +54,12 @@
 				
 				</ul>
 			</div>
-			<div class="panel-footer"></div>
 			<!-- 댓글 페이지 나누기 -->
+			<div class="panel-footer">
+			
+			
+			</div>
+			
 		</div>
 		<!-- panel-default close -->
 	</div>
