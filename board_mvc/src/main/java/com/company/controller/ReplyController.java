@@ -41,7 +41,7 @@ public class ReplyController {
 	// /replies/1 + GET 
 	@GetMapping(value = "/{rno}", produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<ReplyDTO> readGet(@PathVariable("rno") int rno){
-		log.info("댓글 삽입 번호"+rno);
+		log.info("댓글 가져오기 번호"+rno);
 				
 		return new ResponseEntity<ReplyDTO>(service.readReply(rno),HttpStatus.OK);
 	
