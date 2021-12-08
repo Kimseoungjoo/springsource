@@ -68,6 +68,7 @@ $(function() {
 		
 	})// # addReplyBtn end
 	modalRegisterBtn.click(function(){
+		// key value형식 
 		var reply ={
 			bno:bno,
 			replyer:modalReplyer.val(),
