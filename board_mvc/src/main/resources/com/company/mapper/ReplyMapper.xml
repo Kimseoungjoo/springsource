@@ -3,7 +3,7 @@
 <mapper namespace="com.company.mapper.ReplyMapper">
 
 	<insert id="insert">
-		insert into spring_reply(rno,bno,reply,replyer) values(seq_reply.nextval,#{bno},#{reply},#{replyer})
+		insert into spring_reply(rno,bno,reply,replyer) values(seq_reply.nextval,#{bno},#{reply},#{replyer}) 
 	</insert>
 	
 	<!-- 댓글 하나 가져오기 -->

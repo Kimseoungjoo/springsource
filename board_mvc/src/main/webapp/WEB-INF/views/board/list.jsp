@@ -34,12 +34,10 @@
 					<c:forEach var="dto" items="${list}">
 						<tr>
 							<td>${dto.bno}</td>
-							<td><a href="${dto.bno}" class="move">${dto.title}</a></td>
+							<td><a href="${dto.bno}" class="move">${dto.title}</a>&nbsp[${dto.replycnt}]</td>
 							<td>${dto.writer}</td>
-							<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm"
-									value="${dto.regdate}" /></td>
-							<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm"
-									value="${dto.updatedate}" /></td>
+							<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${dto.regdate}" /></td>
+							<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${dto.updatedate}" /></td>
 						</tr>
 					</c:forEach>
 				</table>

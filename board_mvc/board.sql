@@ -72,9 +72,17 @@ from spring_reply
 where bno=2799 and rno>0 and rownum<=20)
 where rn > 10;
 
+-- spring_board 테이블에 댓글 수를 저장할 컬럼 추가 
+alter table spring_board add(replycnt number default 0);
 
 
+-- 이미 들어간 댓글 수 삽입하기 
+update SPRING_BOARD
+set replycnt = (select count(rno) 
+				from SPRING_REPLY 
+				where SPRING_BOARD.bno=spring_reply.bno);
 
+select * from spring_board where bno= 2799;
 
 
 
