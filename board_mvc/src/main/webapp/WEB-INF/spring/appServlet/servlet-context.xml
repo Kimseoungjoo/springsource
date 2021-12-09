@@ -22,7 +22,11 @@
 	</beans:bean>
 	
 	<context:component-scan base-package="com.company.controller" />
-	
+
+	<!-- 기본적으로 중간에서 역할을 해주는 multipartResolver가 필요하다  -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<!--  정해진 툴 그대로 사용해야한다. id 변경하면안됨 -->
+	</beans:bean>
 	
 	
 </beans:beans>

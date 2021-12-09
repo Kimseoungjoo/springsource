@@ -2,7 +2,35 @@
  *  uplaodFormAjax.jsp 와 관련된 js
  */
 $(function() {
-	$("#uploadBtn").click(function(e) {
+	// SUBMMIT 버튼이 눌러졌을 때  첨부파일 정보 추가하기
+	$(":submit").click(function(e){
+		e.preventDefault();
+		
+		// 첨부된 파일 정보 수집하기 
+		var str="";
+		$(".uploadResult ul li").each(function(i,obj){
+			var ele = $(obj);
+			
+			str += "<input type='hidden' name='attachList["+ i +"].uuid' value='"+ele.data('uuid')+"'>";
+			str += "<input type='hidden' name='attachList["+ i +"].uploadPath' value='"+ele.data('path')+"'>";
+			str += "<input type='hidden' name='attachList["+ i +"].fileName' value='"+ele.data('filename')+"'>";
+			str += "<input type='hidden' name='attachList["+ i +"].fileType' value='"+ele.data('type')+"'>";
+			
+			// 밑의 li 작업 한 구문 
+			//str += "<li data-path ='"+ obj.uploadPath +"' data-uuid='"+ obj.uuid +"'";
+			//str += " data-filename='"+ obj.fileName +"' data-type='"+ obj.fileType +"'>";
+		})
+		// 잘들어왔는지 확인 코드 
+		console.log("form");
+		console.log(str);
+		
+		// 게시글 등록 폼에 추가하기
+		$("form[role='form']").append(str).submit();
+	})
+	
+	
+	
+	$("input[type='file']").change(function(e) {
 		e.preventDefault();
 		
 		console.log("업로드 요청");
@@ -40,6 +68,7 @@ $(function() {
 			success:function(result){
 				console.log(result);
 				showUploadFile(result);
+				$("input[name='uploadFile']").val("");
 			},
 			error:function(xhr,status,error){
 				console.log(xhr.responseText);
@@ -65,11 +94,12 @@ $(function() {
 				var originPath = obj.uploadPath+"\\"+obj.uuid+"_"+obj.fileName;
 				originPath = originPath.replace(new RegExp(/\\/g),"/");
 				
-				str += "<li>";
+				str += "<li data-path ='"+ obj.uploadPath +"' data-uuid='"+ obj.uuid +"'";
+				str += " data-filename='"+ obj.fileName +"' data-type='"+ obj.fileType +"'>";
 				str += "<a href=\"javascript:showImage(\'"+originPath+"\')\">";
 				str += "<img src='/display?fileName="+fileCallPath+"'>";
-				str += "<div>"+obj.fileName+"</a>";
-				str += "<span data-file ='"+fileCallPath+"' data-type='image'> X </span>";
+				str += "<div>"+obj.fileName+"</a> ";
+				str += "<button type='button' class='btn btn-warning btn-circle btn-sm' data-file='"+fileCallPath+"' data-type='image'><i class='fa fa-times'></i></button>";
 				str += "</div></li>";
 				
 			}else{
@@ -77,13 +107,16 @@ $(function() {
 				// 다운로드 경로 설정
 				var fileCallPath = encodeURIComponent(obj.uploadPath+"\\"+obj.uuid+"_"+obj.fileName);
 				
-				str += "<li>";
+				str += "<li data-path ='"+ obj.uploadPath +"' data-uuid='"+ obj.uuid +"'";
+				str += " data-filename='"+ obj.fileName +"' data-type='"+ obj.fileType +"'>";
 				str += "<a href='/download?fileName="+fileCallPath+"'>";
-				str += "<img src='/resources/img/attach.png'><div>"+obj.fileName+"</a>"
-				str += "<span data-file ='"+fileCallPath+"' data-type='file'> X </span>";
+				str += "<img src='/resources/img/attach.png'><div>"+obj.fileName+"</a> "
+				str += "<button type='button'class='btn btn-warning btn-circle btn-sm' data-file='"+fileCallPath+"' data-type='file'><i class='fa fa-times'></i></button>";
 				str += "</div></li>";
 			}
 		})
+		console.log(str);
+		
 		uploadResult.append(str);
 		
 
@@ -120,7 +153,7 @@ $(function() {
 	})
 	
 	// 첨부파일 목록에서 X 누르면 목록에서 지우기 
-	$(".uploadResult").on("click","span",function(){ // 이벤트 위임 방식 click이 되면 span에 넘기겠다.
+	$(".uploadResult").on("click","button",function(){ // 이벤트 위임 방식 click이 되면 span에 넘기겠다.
 		// 삭제할 파일 가져오기
 		let targetFile = $(this).data("file");
 		//삭제할 파일의 타입도 가져오기 

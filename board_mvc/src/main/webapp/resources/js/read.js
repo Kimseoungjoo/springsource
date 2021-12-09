@@ -251,6 +251,21 @@ $(function() {
 		pageNum = $(this).attr('href');		
 		showList(pageNum);
 		
+	})// 이벤트 위임 방식 END
+	
+	
+	
+	// 첩부파일 가져오기 
+	$.getJSON({
+		url:'getAttachList', // == /board/getAttachList 
+		data:{
+			bno:bno
+		},
+		success:function(data){
+			console.log(data);
+		}	
 	})
-
+	
+	
+		
 })

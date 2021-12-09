@@ -15,8 +15,10 @@
 	</form>
 	<div class="uploadResult">
 		<ul>
-		
 		</ul>
+	</div>
+	<div class="bigPictureWrapper">
+		<div class="bigPicture"></div>
 	</div>
 <script src="/resources/js/upload.js"></script>
 </body>
