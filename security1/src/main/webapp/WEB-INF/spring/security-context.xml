@@ -8,6 +8,10 @@
 	<!-- 암호화 객체 -->
 	<bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
 
+	<!-- CustomUserDetailService 객체 생성 -->
+	<bean id="customUserDetailService" class="com.company.service.CustomUserDetailService"></bean>
+
+
 	<bean id="customAccessDeniedHandler" class="com.company.handler.CustomAccessDeniedHandler">	</bean>
 	<bean id="customLoginSuccessHandler" class="com.company.handler.CustomLoginSuccessHandler"></bean>
 	<security:http>
@@ -36,15 +40,27 @@
 		<security:intercept-url pattern="/user-page" access="hasRole('ROLE_USER')"/>  <!-- access : 권한이 있는지 확인 -->
 		<security:intercept-url pattern="/admin-page" access="hasRole('ROLE_ADMIN')"/>  <!-- access : 권한이 있는지 확인 -->
 		
+		<!-- remember-me 활성화 -->
+		<security:remember-me data-source-ref="ds" token-validity-seconds="604800"/>
+		
 		
 	</security:http>
-
+	
+	<!-- 인증방식 : JDBC 인증방식  -->
 	<security:authentication-manager>
+		<security:authentication-provider user-service-ref="customUserDetailService">
+			<security:password-encoder ref="bCryptPasswordEncoder"/>
+		</security:authentication-provider>	
+	</security:authentication-manager>
+	
+	<!-- 인증 방식 : in-memory 방식(테스트 방식일 뿐이다.) -->
+	<!-- <security:authentication-manager>
 		<security:authentication-provider>
 			<security:user-service>
-				<security:user name="user1" password="{noop}user1" authorities="ROLE_USER"/> <!-- noop 보안을 잠깐 안하것다  -->
+				<security:user name="user1" password="{noop}user1" authorities="ROLE_USER"/> noop 보안을 잠깐 안하것다 
 				<security:user name="admin" password="{noop}admin" authorities="ROLE_ADMIN,ROLE_USER"/>
 			</security:user-service>
 		</security:authentication-provider>
-	</security:authentication-manager>
-</beans>
+	</security:authentication-manager>-->
+	
+</beans> 
