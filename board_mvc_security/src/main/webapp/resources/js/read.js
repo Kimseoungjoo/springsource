@@ -48,7 +48,16 @@ $(function() {
 	let modalModifyBtn = modal.find("#modalModifyBtn");
 	let modalRemoveBtn = modal.find("#modalRemoveBtn");
 	
+
 	
+	// beforeSend : ajax 추가해서 header 값으로 보내야 하는 값들을 전송(ajax 코드 안에 해당 코드가 존재해야 함)
+	// ajaxSend() : ajax 호출되면 무조건 이 값을 헤더로 전송
+	$(document).ajaxSend(function(e,xhr,options){
+		xhr.setRequestHeader(csrfHeaderName,csrfTokenValue);
+	});
+	
+	
+	// 댓글 삽입
 	$("#addReplyBtn").click(function(e){
 		// input 안에 들어있는 value 제거
 		modal.find("input").val("");
@@ -62,6 +71,9 @@ $(function() {
 		
 		// 등록 버튼 보여주기 
 		modalRegisterBtn.show();
+		
+		// 로그인 사용자 보여주기
+		modalReplayer.val(replyer).attr("readonly","readonly");
 		
 		// 댓글 MODAL 창 보여주기
 		modal.modal('show');
@@ -93,8 +105,23 @@ $(function() {
 	
 	//------------------------- 댓글 삭제 하기------------------------
 	modalRemoveBtn.click(function(){
+		// 로그인 여부 
+		if(!replyer){
+			alter('로그인 한 후 삭제가 가능합니다.');
+			modal.modal("hide");
+			return;
+		}
+		// 로그인 사용자 == 댓글 작성자 
 		
-		replyService.remove(modal.data("rno"),
+		// 댓글 작성자 가져오기 
+		let oriReplyer = modalReplyer.val();
+		if(replyer != oriReplyer){
+			alter('자신의 댓글만 삭제가 가능합니다');
+			modal.modal("hide");
+			return;
+		}
+		// 댓글 삭제
+		replyService.remove(modal.data("rno"),oriReplyer,
 			function(result){ //success
 				if(result=="success"){
 					alert("댓글 삭제 성공");
@@ -110,13 +137,28 @@ $(function() {
 		}); // remove end
 	})
 	//-----------------------------------------------------------
-
 	//------------------------댓글 수정-------------------------------
 	modalModifyBtn.click(function(){
+		// 로그인 여부 
+		if(!replyer){
+			alter('로그인 한 후 수정가 가능합니다.');
+			modal.modal("hide");
+			return;
+		}
+		// 로그인 사용자 == 댓글 작성자 
+		
+		// 댓글 작성자 가져오기 
+		let oriReplyer = modalReplyer.val();
+		if(replyer != oriReplyer){
+			alter('자신의 댓글만 수정가 가능합니다');
+			modal.modal("hide");
+			return;
+		}
 		
 		var reply = {
 			rno:modal.data("rno"),
 			reply:modalReply.val(),
+			replyer:oriReplyer
 		};
 		
 		replyService.update(reply,
@@ -149,7 +191,7 @@ $(function() {
 			
 			// 도착한 데이터를 모달창에 보여주기 
 			modalReply.val(data.reply);
-			modalReplyer.val(data.replyer);
+			modalReplyer.val(data.replyer).attr("readonly","readonly");
 			modalReplyDate.val(replyService.displayTime(data.replydate)).attr("readonly","readonly");
 			
 			// 수정/삭제 를 위한 기본키

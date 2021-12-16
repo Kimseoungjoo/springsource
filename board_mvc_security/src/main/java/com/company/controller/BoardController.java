@@ -45,6 +45,7 @@ public class BoardController {
 	}
 	
 	//게시판 등록
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/register")
 	public String registerPost(BoardDTO insertDto, RedirectAttributes rttr) {
 		log.info("registerPost 데이터 가져오기"+insertDto);//
@@ -73,6 +74,7 @@ public class BoardController {
 	}
 	
 	//post /modify
+	@PreAuthorize("principal.username == #modifyDto.writer") // 안전장치
 	@PostMapping("/modify")
 	public String modifyPost(BoardDTO updateDto, Criteria cri, RedirectAttributes rttr) {
 		log.info("게시글 수정"+updateDto+"  "+cri);
@@ -95,8 +97,9 @@ public class BoardController {
 	}
 	
 	//post /remove
+	@PreAuthorize("principal.username == #writer") // 안전장치
 	@PostMapping("/remove")
-	public String removePost(int bno,Criteria cri ,RedirectAttributes rttr) {
+	public String removePost(int bno, String writer, Criteria cri , RedirectAttributes rttr) {
 
 		// 첨부파일 목록 가져오기
 		List<AttachFileDTO> attacahList =  service.findByBno(bno);
